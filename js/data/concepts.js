@@ -170,23 +170,157 @@ public class Main {
   Qz.q7 = { q: '<p><code>int[][] m = new int[3][];</code> What is <code>m[1]</code>?</p>', opts: ['0', 'An empty array', 'null', 'Compile error'], ans: 2, why: '<p>Only the outer array (3 row references) exists. Each row is null until you write <code>m[1] = new int[k];</code>.</p>' };
   Qz.q8 = { q: '<p>Which two methods can be in the same class?</p>', opts: ['int f(int a) and double f(int b)', 'void f(int a, double b) and void f(double a, int b)', 'void f(int a) and void f(int b)', 'None of these'], ans: 1, why: '<p>Overloads must differ in parameter <b>types</b> (or count, or order). The return type and parameter names don’t count.</p>' };
 
+  T('demo-bank', {
+    code: code`
+class BankAccount {
+    public String name;
+    public String id;
+    public double balance;
+
+    public void deposit(double amount) {
+        balance = balance + amount;
+    }
+    public void withdraw(double amount) {
+        if (amount < balance)
+            balance -= amount;
+    }
+}
+public class TestBankAccount {
+    public static void main(String[] args) {
+        BankAccount accountR = new BankAccount();
+        BankAccount accountK = new BankAccount();
+        accountR.name = "Rashid";
+        accountR.balance = 1000;
+        accountK.name = "Kashem";
+        accountK.balance = 1000;
+        accountK.deposit(2000);
+        System.out.println("Kashem's balance: " + accountK.balance);
+        System.out.println("Rashid's balance: " + accountR.balance);
+    }
+}`,
+    expect: "Kashem's balance: 3000.0\nRashid's balance: 1000.0",
+    steps: [
+      S('BankAccount accountR = new BankAccount();', '<code>new</code> creates the object. No constructor was written, so the <b>default constructor</b> gives every field its default value (null / 0.0).', ['call', 'main()'], ['new', 'r', 'BankAccount', { name: 'null', id: 'null', balance: '0.0' }], ['v', 'accountR', '@r']),
+      S('BankAccount accountK = new BankAccount();', 'A second object with its OWN copy of name, id and balance.', ['new', 'k', 'BankAccount', { name: 'null', id: 'null', balance: '0.0' }], ['v', 'accountK', '@k']),
+      S('accountR.name = "Rashid";', 'The dot operator: <code>reference.field</code>.', ['f', 'r', 'name', '"Rashid"']),
+      S('accountR.balance = 1000;', 'int 1000 is stored as double 1000.0', ['f', 'r', 'balance', '1000.0']),
+      S('accountK.name = "Kashem";', '', ['f', 'k', 'name', '"Kashem"']),
+      S('accountK.balance = 1000;', '', ['f', 'k', 'balance', '1000.0']),
+      S('accountK.deposit(2000);', 'Calling a method through accountK → inside deposit, the fields belong to Kashem’s object.', ['call', 'deposit(double amount)', { this: '@k', amount: '2000.0' }]),
+      S('balance = balance + amount;', 'Only Kashem’s balance changes.', ['f', 'k', 'balance', '3000.0']),
+      S('System.out.println("Kashem', '', ['ret'], ['p', "Kashem's balance: 3000.0"]),
+      S('System.out.println("Rashid', 'Rashid’s object was never touched by deposit.', ['p', "Rashid's balance: 1000.0"])
+    ]
+  });
+
+  T('demo-scope', {
+    code: code`
+public class ScopeDemo {
+    static int bonusPoints(int score) {
+        int points = 0;
+        for (int i = 1; i <= 3; i++) {
+            int bonus = i * score;
+            points += bonus;
+        }
+        // i and bonus do not exist here any more
+        return points;
+    }
+    public static void main(String[] args) {
+        int total = bonusPoints(10);
+        System.out.println(total);
+    }
+}`,
+    expect: '60',
+    steps: [
+      S('int total = bonusPoints(10);', 'Calling a method creates a new frame. Its parameters are local variables of that method.', ['call', 'main()'], ['call', 'bonusPoints(int score)', { score: '10' }]),
+      S('int points = 0;', 'points: scope = the whole method (from this line down).', ['v', 'points', '0']),
+      S('for (int i = 1; i <= 3; i++) {', 'i: scope = the for loop only.', ['v', 'i', '1']),
+      S('int bonus = i * score;', 'bonus: scope = the loop body only. It is created fresh on every iteration.', ['v', 'bonus', '10']),
+      S('points += bonus;', '', ['v', 'points', '10']),
+      S('for (int i = 1; i <= 3; i++) {', 'End of the body → bonus dies. Next iteration.', ['vd', 'bonus'], ['v', 'i', '2']),
+      S('int bonus = i * score;', 'A NEW bonus variable. Legal, because the old one is already dead.', ['v', 'bonus', '20']),
+      S('points += bonus;', '', ['v', 'points', '30']),
+      S('for (int i = 1; i <= 3; i++) {', '', ['vd', 'bonus'], ['v', 'i', '3']),
+      S('int bonus = i * score;', '', ['v', 'bonus', '30']),
+      S('points += bonus;', '', ['v', 'points', '60']),
+      S('// i and bonus do not exist here any more', 'Loop finished: both i and bonus are out of scope. Using them here would be a compile error.', ['vd', 'bonus'], ['vd', 'i']),
+      S('return points;', 'When the method returns, its whole frame (score, points) disappears.'),
+      S('System.out.println(total);', '', ['ret'], ['v', 'total', '60'], ['p', '60'])
+    ]
+  });
+
+  Qz.q9 = { q: '<p>Which of these is <b>not</b> a way to give a field its initial value?</p>', opts: ['Direct assignment: <code>double balance = 100.0;</code>', 'An instance initialization block <code>{ … }</code>', 'A constructor', 'A <code>return</code> statement in main'], ans: 3, why: '<p>Lecture 3 lists exactly three: direct assignment, instance initialization block, and constructor.</p>' };
+  Qz.q10 = { q: '<p>Will this compile?</p>' + c('void f(double balance) {\n    float interest;\n    if (balance > 10000) {\n        float interest = 0.05f;\n    }\n}'), opts: ['Yes', 'No: interest is declared twice while the first one is still alive', 'No: float needs a cast', 'Yes, but it prints nothing'], ans: 1, why: '<p>Two local variables can share a name only after the first one is dead. Here the outer <code>interest</code> is still in scope inside the if block.</p>' };
+  Qz.q11 = { q: '<p>What happens?</p>' + c('Student[] students = new Student[3];\nSystem.out.println(students[0].cgpa);'), opts: ['Prints 0.0', 'Prints null', 'NullPointerException at runtime', 'Compile error'], ans: 2, why: '<p><code>students[0]</code> is <code>null</code>, so no Student object exists. Using <code>.cgpa</code> on null throws <b>NullPointerException</b>. It compiles fine; it fails while running.</p>' };
+
   // ------------------------------------------------------------------ Class & Object page
   page('class-object', {
     title: '📦 Class &amp; Object',
     intro: '<p class="muted">Everything the mid asks about classes and objects, in the order the topics build on each other. Each section ends with links to the past questions on that topic.</p>',
     sections: [
       {
+        id: 'paradigms', title: 'Why OOP? Two paradigms',
+        html: `<p><span class="badge" style="background:var(--info-soft);color:var(--info);border-color:transparent">📘 Lecture 3</span> Every program has two things: <b>code</b> and <b>data</b>. A program can be organised around either one:</p>
+<div class="table-wrap"><table><tr><th></th><th>Procedural (e.g. C)</th><th>Object-oriented (Java)</th></tr>
+<tr><td>Organised around</td><td>“what is happening” (the code)</td><td>“who is being affected” (the data)</td></tr>
+<tr><td>Data and operations</td><td><b>separate</b>: a struct Student plus a separate function updateCgpa(student)</td><td><b>bundled</b> together in one class: fields + methods</td></tr>
+<tr><td>Example</td><td><code>updateCgpa(&amp;s, 3.8);</code></td><td><code>s.updateCgpa(3.8);</code></td></tr></table></div>
+<ul><li><b>Object</b>: a software bundle of related <b>state</b> (fields) and <b>behaviour</b> (methods). It models a real-world thing.</li>
+<li><b>Class</b>: the blueprint/prototype objects are created from. It <b>defines a new data type</b>. “Object” and “instance” mean the same thing.</li></ul>`
+      },
+      {
         id: 'basics', title: 'Class, object, reference', qlinks: 'class-basics',
         html: `<ul><li><b>Class</b>: a blueprint/type. It describes fields (data) and methods (behaviour). Written once.</li>
 <li><b>Object</b>: a real instance of the class, created at runtime with <code>new</code>. It lives on the <b>heap</b>, and each object has its own copy of the instance fields.</li>
 <li><b>Reference</b>: a variable that stores the <i>address</i> of an object. Think of it as an <b>arrow</b>. Local variables (including references) live on the <b>stack</b>.</li></ul>
 <div class="callout note"><b class="t">The sentence to remember</b><code>Student s = new Student();</code> = create an object on the heap, then store an arrow to it in the variable s.</div>
+<h3><span class="badge" style="background:var(--info-soft);color:var(--info);border-color:transparent">📘 Lecture 3</span> Class members and the general form</h3>
+<p>A class has two kinds of members:</p><ul>
+<li><b>Instance variables</b> (fields / properties / attributes): <b>each object gets its own copy</b>, so one object’s data is separate from another’s.</li>
+<li><b>Methods</b> (actions / behaviour): the code. As a rule, the methods decide how the class’s data can be used.</li></ul>
+${c(`class ClassName {
+    datatype instanceVariable1;      // fields
+    datatype instanceVariable2;
+
+    returnType methodName1(parameter-list) {
+        // body of method
+    }
+}
+
+ClassName ref = new ClassName(arguments);   // create an object with new
+ref.instanceVariable1 = value;              // access a field with the dot operator
+ref.methodName1(arguments);                 // call a method with the dot operator`)}
+<p>The lecture’s BankAccount example: two objects of one class, and calling <code>deposit</code> on one doesn’t touch the other.</p>
+<div data-trace="demo-bank"></div>
 <p>Step through this and watch the arrows. This picture is how you answer every reference/GC question:</p>
 <div data-trace="demo-ref"></div>
 <div data-widget="quiz" data-id="q1"></div>
 <h3>Default values of fields</h3>
 <div class="table-wrap"><table><tr><th>Type</th><th>Default</th><th>Printed as</th></tr><tr><td>int, long, short, byte</td><td>0</td><td>0</td></tr><tr><td>double, float</td><td>0.0</td><td>0.0</td></tr><tr><td>boolean</td><td>false</td><td>false</td></tr><tr><td>char</td><td>'\\u0000'</td><td>(invisible)</td></tr><tr><td>String / any object</td><td>null</td><td>null</td></tr></table></div>
 <div class="callout trap"><b class="t">Trap</b>Only <b>fields</b> get default values. A local variable inside a method must be assigned before use, or it is a compile error.</div>`
+      },
+      {
+        id: 'init-fields', title: 'Three ways to initialise fields', qlinks: 'init-order',
+        html: `<p><span class="badge" style="background:var(--info-soft);color:var(--info);border-color:transparent">📘 Lecture 3</span> Java gives a field its starting value in one of three ways:</p>
+${c(`import java.util.Random;
+public class BankAccount {
+    public String name;
+    public String id;
+    public double balance = 100.0;              // 1. DIRECT ASSIGNMENT
+
+    {                                           // 2. INSTANCE INITIALIZATION BLOCK
+        id = new Random().nextInt(99999) + "";  //    runs for EVERY object created
+    }
+
+    public BankAccount(String name) {           // 3. CONSTRUCTOR
+        this.name = name;
+    }
+}`)}
+<ul><li><b>Direct assignment</b>: simplest, used most often.</li>
+<li><b>Instance initialization block</b>: code inside the class but outside any method. It runs every time an object is created. Several blocks run <b>top to bottom</b>. Use it when initialisation needs more than one expression but no input parameters.</li>
+<li><b>Constructor</b>: used when the starting values come from the caller (parameters).</li></ul>
+<div class="callout tip"><b class="t">Order (connects to the next sections)</b>Direct assignments and instance blocks run first, in the order they are written, then the constructor body. This is the basis of most “write the output” questions.</div>
+<div data-widget="quiz" data-id="q9"></div>`
       },
       {
         id: 'constructors', title: 'Constructors, <code>this</code> and <code>this(...)</code>', qlinks: 'constructors',
@@ -202,6 +336,25 @@ ${c(`class Point {
         this(other.x, other.y);
     }
 }`)}
+<h3><span class="badge" style="background:var(--info-soft);color:var(--info);border-color:transparent">📘 Lecture 3</span> What a constructor is</h3><ul>
+<li>It <b>initialises the object</b> (its instance variables) immediately when it is created, or runs any other set-up code.</li>
+<li>Same name as the class and <b>no return type, not even void</b>. Its implicit return type is the class itself.</li>
+<li>You never call it directly. It is called <b>automatically</b> by <code>new</code>, before <code>new</code> finishes.</li></ul>
+<h3><span class="badge" style="background:var(--info-soft);color:var(--info);border-color:transparent">📘 Lecture 3</span> The default constructor</h3>
+<p>If a class has no constructor, Java creates a default one. It sets every field to its default value: <code>boolean → false</code>, every other primitive → <code>0</code>, references → <code>null</code>. Once you write your own constructor, the default one is <b>no longer used</b>.</p>
+<h3><span class="badge" style="background:var(--info-soft);color:var(--info);border-color:transparent">📘 Lecture 3</span> The <code>this</code> keyword</h3>
+<p><code>this</code> refers to the <b>current object</b>, the object the method or constructor was called on. The lecture’s classic bug:</p>
+${c(`public BankAccount(String name, String id, double balance) {
+    name = name;          // ❌ both sides are the PARAMETER: the field stays null
+    id = id;
+    balance = balance;
+}
+public BankAccount(String name, String id, double balance) {
+    this.name = name;     // ✅ this.name = the field of the current object
+    this.id = id;
+    this.balance = balance;
+}`)}
+<p>(Another style from the lecture: give the parameters different names like <code>_name</code>, so that <code>name = _name;</code> needs no <code>this</code>.)</p>
 <h3>Rules the exam tests</h3><ol>
 <li>If you write <b>no</b> constructor, Java gives you a default no-arg one. Write <b>any</b> constructor and that free one disappears → <code>new Point()</code> breaks unless you write it.</li>
 <li><code>this.x = x</code>: when a parameter has the same name as a field, the bare name means the <b>parameter</b>. <code>x = x</code> does nothing.</li>
@@ -209,6 +362,36 @@ ${c(`class Point {
 <li>Constructor chains run like nested calls: the called constructor finishes completely, then the caller continues with its remaining lines.</li>
 <li>If <code>void</code> is written before it, it is a method, not a constructor. That is a classic "find the error".</li></ol>
 <div data-widget="quiz" data-id="q2"></div><div data-widget="quiz" data-id="q3"></div>`
+      },
+      {
+        id: 'scope', title: 'Scope &amp; lifetime of variables',
+        html: `<p><span class="badge" style="background:var(--info-soft);color:var(--info);border-color:transparent">📘 Lecture 3</span> <b>Scope</b> decides where a variable can be used, and also how long it lives. In Java, <b>a block <code>{ … }</code> defines a scope</b>:</p>
+<ul><li>A variable declared inside a block is not visible outside it.</li>
+<li>Inside a block, a variable is usable only <b>after</b> the line that declares it.</li>
+<li>Java’s two major scopes are those defined by a <b>class</b> (fields: they live as long as the object) and by a <b>method</b> (locals and parameters: they live until the method returns).</li></ul>
+${c(`public void calculateInterest(double balance) {
+    if (balance > 10000) {
+        float interest = 0.05f;   // scope: only this if-block
+    } else {
+        interest = 0.02f;         // ❌ compile error: interest doesn't exist here
+    }
+}
+
+public void calculateInterest(double balance) {
+    float interest;               // ✅ declared outside: visible in both blocks
+    if (balance > 10000) {
+        interest = 0.05f;
+    } else {
+        interest = 0.02f;
+    }
+}`)}
+<h3>When can two variables have the same name?</h3>
+<ol><li>An <b>instance variable and a local variable</b> (the local one shadows the field; use <code>this.x</code> to reach the field).</li>
+<li>Local variables in <b>two different methods</b>.</li>
+<li>Two locals in the same method, but only <b>after the first one is dead</b> (e.g. in two separate blocks, like the if and else above).</li></ol>
+<p>Watch variables appear and disappear as their blocks start and end:</p>
+<div data-trace="demo-scope"></div>
+<div data-widget="quiz" data-id="q10"></div>`
       },
       {
         id: 'init-order', title: 'Initialization order: the #1 output question', qlinks: 'init-order',
@@ -391,7 +574,13 @@ for (int i = 0; i < j.length; i++) {            // rows
       },
       {
         id: 'objects', title: 'Arrays of objects', qlinks: 'array-obj',
-        html: `${c(`Student[] list = new Student[3];   // 3 null references, ZERO students
+        html: `<p><span class="badge" style="background:var(--info-soft);color:var(--info);border-color:transparent">📘 Lecture 3</span> Arrays are <b>reference types</b>: <code>new</code> creates the array object on the heap and the variable stores a reference to it. Every element starts at its default value: <code>new int[10]</code> → ten 0s, <code>new Student[10]</code> → ten <b>null</b>s.</p>
+<div class="table-wrap"><table><tr><th>Code</th><th><code>student.name</code> gives…</th></tr>
+<tr><td><code>Student student = new Student("Rashid", "011153001", 3.0f, 50);</code></td><td><code>"Rashid"</code> (the object exists)</td></tr>
+<tr><td><code>Student student = null;</code></td><td>❌ <b>NullPointerException</b>: no object to read from</td></tr></table></div>
+<p>You can’t use a member through a reference when no object was created. Each array element must be given an object first.</p>
+<div data-widget="quiz" data-id="q11"></div>
+${c(`Student[] list = new Student[3];   // 3 null references, ZERO students
 list[0] = new Student("Ana", 3.9); // now one Student exists
 list[1].getName();                 // NullPointerException: list[1] is null
 

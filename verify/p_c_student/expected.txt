@@ -1,0 +1,2 @@
+Ayan total = 255.5, average = 85.16666666666667
+Bristy total = 310.0, average = 77.5

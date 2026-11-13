@@ -11,7 +11,7 @@ const root = path.join(__dirname, '..');
 const ctx = { window: {}, console, CSS: { escape: s => s }, requestAnimationFrame: () => {} };
 ctx.window = ctx;
 vm.createContext(ctx);
-for (const f of ['js/core.js', 'js/tracer.js', 'js/widgets.js', 'js/data/concepts.js', 'js/data/q-class.js', 'js/data/q-class-2.js', 'js/data/q-array.js', 'js/data/practice.js']) {
+for (const f of ['js/core.js', 'js/tracer.js', 'js/widgets.js', 'js/data/concepts.js', 'js/data/q-class.js', 'js/data/q-class-2.js', 'js/data/q-array.js', 'js/data/practice.js', 'js/data/practice-class.js']) {
   const p = path.join(root, f);
   if (fs.existsSync(p)) vm.runInContext(fs.readFileSync(p, 'utf8'), ctx, { filename: f });
 }

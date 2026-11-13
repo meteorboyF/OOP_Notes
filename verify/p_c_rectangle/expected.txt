@@ -1,0 +1,2 @@
+r1: area = 15.0, perimeter = 16.0
+r2: area = 10.0, perimeter = 13.0

@@ -1,0 +1,2 @@
+r = 7.0: area = 153.94, circumference = 43.98
+r = 2.5: area = 19.63, circumference = 15.71

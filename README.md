@@ -6,10 +6,10 @@ Study site for the UIU CSE 1115 Object Oriented Programming mid-term, built from
 
 ## What's inside
 
-- **Learn**: concept notes for *Class & Object* and *Arrays*, with exam traps, quizzes and small interactive widgets (String `+` evaluator, jagged array builder).
+- **Learn**: concept notes for *Class & Object* and *Arrays* (including the Lecture 3 slide theory up to arrays), with exam traps, quizzes and small interactive widgets (String `+` evaluator, jagged array builder).
 - **Past mid questions**: every Class/Object and Array question from the papers, with full answers, explanations, tricks and traps. Filter by topic or type, or browse by paper.
 - **Step-by-step visualiser**: steps through the code showing the stack, the heap, static variables, reference arrows, garbage-collectable objects and console output.
-- **Array practice**: 32 write-the-code problems (basic → medium → hard). Each visualiser runs on input you type.
+- **Practice problems**: the course *Class & Object* practice sheet (8 problems) solved with step-by-step traces, plus 32 array problems (basic → medium → hard) whose visualisers run on input you type.
 - **Exam cheat-sheet**: every trap that has appeared in a paper, on one page.
 
 Inheritance / polymorphism / abstract classes will be added in a later chapter.

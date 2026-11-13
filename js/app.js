@@ -53,7 +53,7 @@
       '<p>Concepts, every Class/Object and Array question from 24 past mid papers (Fall 2017 to Spring 2026) with solutions, ' +
       'exam tricks, and step-by-step visualisers that show the stack, the heap and the references while the code runs.</p>' +
       '<div class="stats"><div class="stat"><b>' + nq + '</b><span>solved past questions</span></div>' +
-      '<div class="stat"><b>' + OOP.practice.length + '</b><span>array practice problems</span></div>' +
+      '<div class="stat"><b>' + OOP.practice.length + '</b><span>practice problems</span></div>' +
       '<div class="stat"><b>' + nt + '</b><span>interactive visualisers</span></div>' +
       '<div class="stat"><b>24</b><span>papers analysed</span></div></div></div>' +
       '<h2>Start here</h2><div class="grid cols-3">' +
@@ -62,7 +62,7 @@
       tile('#/cheatsheet', '⚡ Exam cheat-sheet', 'Every trap that has appeared in the papers, on one page. Read it the night before.') +
       tile('#/questions/class', '📝 Class & Object questions', 'Output tracing, write-the-class and fix-the-error questions with full answers.') +
       tile('#/questions/array', '📝 Array questions', 'Every array question from the mids, solved and explained.') +
-      tile('#/practice', '💻 Array practice', 'Basic → medium → hard problems with an editable-input visualiser.') +
+      tile('#/practice', '💻 Practice problems', 'The course Class & Object sheet solved, plus array problems from basic to hard, all with visualisers.') +
       '</div>' +
       '<h2>What the mids actually ask</h2><p class="muted">Each cell counts questions on that topic in that paper. Darker = more. Initialization order and references show up in nearly every recent paper.</p>' +
       '<div class="card">' + heat + '</div>' +
@@ -161,14 +161,14 @@
   }
 
   function practicePage() {
-    const levels = [['basic', '🟢 Basic', 'Single loop over an array. These must be automatic.'], ['medium', '🟡 Medium', 'Two pointers, nested loops, sorting, 2D arrays.'], ['hard', '🔴 Hard', 'Classic interview-style array problems and arrays of objects.']];
-    return '<div class="page"><h1>Array practice: write the code</h1>' +
-      '<p class="muted">Every problem has a Java solution, an explanation, and a visualiser where <b>you can change the input</b> and watch the loop run. ' +
+    const levels = [['class', '📦 Class & Object', 'The course practice sheet: write a class, then test it in main.'], ['basic', '🟢 Basic', 'Single loop over an array. These must be automatic.'], ['medium', '🟡 Medium', 'Two pointers, nested loops, sorting, 2D arrays.'], ['hard', '🔴 Hard', 'Classic interview-style array problems and arrays of objects.']];
+    return '<div class="page"><h1>Practice: write the code</h1>' +
+      '<p class="muted">The Class &amp; Object problems are the course practice sheet, solved. The array problems go from basic to hard, and their visualisers let <b>you change the input</b> and watch the loop run. Every solution was run through Java. ' +
       'Problems tagged <span class="badge">mid</span> came up in a past mid paper.</p>' +
       levels.map(([lv, name, d]) => {
         const ps = OOP.practice.filter(p => p.level === lv);
         return '<div class="section-head"><h2>' + name + '</h2><span class="muted">' + ps.length + ' problems · ' + d + '</span></div><div class="qlist">' +
-          ps.map((p, i) => '<a class="card qitem" href="#/p/' + p.id + '"><span class="qnum">' + lv[0].toUpperCase() + (i + 1) + '</span><span><span class="ttl">' + esc(p.title) + '</span><br><span class="sub">' + esc(p.short || '') + '</span></span>' +
+          ps.map((p, i) => '<a class="card qitem" href="#/p/' + p.id + '"><span class="qnum">' + (lv === 'class' ? 'C' : lv[0].toUpperCase()) + (i + 1) + '</span><span><span class="ttl">' + esc(p.title) + '</span><br><span class="sub">' + esc(p.short || '') + '</span></span>' +
             '<span class="badges">' + (p.mid ? '<span class="badge">mid ' + esc(p.mid) + '</span>' : '') + '<span class="badge viz">▶ visualiser</span>' + (done.has(p.id) ? '<span class="done-mark">✅</span>' : '') + '</span></a>').join('') + '</div>';
       }).join('') + '</div>';
   }
@@ -186,15 +186,15 @@
       if (r) r.onclick = () => { OOP.save('oop-rev-' + p.id, true); document.getElementById('ans').innerHTML = codeBlock(p.full || p.code) + (p.output ? outBlock(p.output) : ''); wireCopy(); };
     });
     const shown = revealAll || OOP.load('oop-rev-' + p.id, false);
-    return '<div class="page wide"><div class="crumbs"><a href="#/practice">Array practice</a> › ' + p.level + '</div>' +
-      '<h1>' + esc(p.title) + '</h1><div class="badges"><span class="badge ' + p.level + '">' + p.level + '</span>' + (p.mid ? '<span class="badge">asked in mid ' + esc(p.mid) + '</span>' : '') +
+    return '<div class="page wide"><div class="crumbs"><a href="#/practice">Practice</a> › ' + (p.level === 'class' ? 'Class & Object' : p.level) + '</div>' +
+      '<h1>' + esc(p.title) + '</h1><div class="badges"><span class="badge ' + (p.level === 'class' ? 'code' : p.level) + '">' + (p.level === 'class' ? 'Class & Object' : p.level) + '</span>' + (p.mid ? '<span class="badge">asked in mid ' + esc(p.mid) + '</span>' : '') +
       (p.complexity ? '<span class="badge">' + esc(p.complexity) + '</span>' : '') +
       '<button class="btn small done-toggle" id="doneBtn">' + (done.has(p.id) ? '✅ Done' : '☐ Mark as done') + '</button></div>' +
       '<div class="qsec"><h2>📄 Problem</h2><div class="prose">' + p.prompt + '</div></div>' +
       '<div class="qsec"><h2>🧠 Idea</h2><div class="prose">' + p.idea + '</div></div>' +
       '<div class="qsec"><h2>✅ Full Java solution</h2><div id="ans">' + (shown ? codeBlock(p.full || p.code) + (p.output ? outBlock(p.output) : '') :
         '<div class="reveal"><p>Write it yourself first. Then compare.</p><button class="btn primary" id="revealBtn">Reveal solution</button></div>') + '</div></div>' +
-      '<div class="qsec"><h2>▶ Visualise it (edit the input!)</h2><div id="trace"></div></div>' +
+      '<div class="qsec"><h2>▶ ' + (p.input.fields.length ? 'Visualise it (edit the input!)' : 'Trace main() step by step') + '</h2><div id="trace"></div></div>' +
       (p.tips && p.tips.length ? '<div class="qsec"><h2>💡 Tricks &amp; tips</h2><ul class="tips-list">' + p.tips.map(t => '<li class="callout tip">' + t + '</li>').join('') + '</ul></div>' : '') +
       '<div class="qnav">' + (prev ? '<a class="btn" href="#/p/' + prev.id + '">← ' + esc(prev.title) + '</a>' : '<span></span>') +
       (next ? '<a class="btn" href="#/p/' + next.id + '">' + esc(next.title) + ' →</a>' : '') + '</div></div>';

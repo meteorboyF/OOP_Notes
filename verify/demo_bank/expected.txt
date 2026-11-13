@@ -1,0 +1,2 @@
+Kashem's balance: 3000.0
+Rashid's balance: 1000.0
