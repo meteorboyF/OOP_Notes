@@ -1,0 +1,2 @@
+Main diagonal: 15
+Anti diagonal: 15

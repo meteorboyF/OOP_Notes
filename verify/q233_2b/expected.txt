@@ -1,0 +1,7 @@
+Welcome to pizza shop
+You ordered 2 pizzas, 4 drinks
+Total bill: 800 taka
+You ordered 1 pizzas, 2 drinks, 1 fries
+Total bill: 500 taka
+You ordered 3 pizzas
+Total bill: 960 taka

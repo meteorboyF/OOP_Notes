@@ -1,0 +1,5 @@
+Row 0 (length 2) sum = 6
+Row 1 (length 4) sum = 22
+Row 2 (length 1) sum = 3
+Row 3 (length 3) sum = 24
+Longest row: 1

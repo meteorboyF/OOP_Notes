@@ -1,0 +1,4 @@
+R0-S0 (Row0,Seat0) R0-S1 (Row0,Seat1) 
+R1-S0 (Row1,Seat0) R1-S1 (Row1,Seat1) R1-S2 (Row1,Seat2) 
+R2-S0 (Row2,Seat0) 
+R1-S2 (VIP)

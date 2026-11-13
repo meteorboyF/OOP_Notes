@@ -1,0 +1,2 @@
+The area A of a rectangle is given by the formula, A=lw, where l is the length and w is the width.
+Area: 20

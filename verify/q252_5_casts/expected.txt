@@ -1,0 +1,7 @@
+1: Shape
+2: Rectangle
+3: Square
+4: Rectangle
+5: ERROR, ClassCastException
+6: Square
+Total Area is: 22.0

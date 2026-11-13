@@ -1,0 +1,6 @@
+Printing 3 copies of the document: Assignment.pdf
+Printing copy 1
+Printing copy 2
+Printing copy 3
+Printing document: Report.pdf
+Red Color mode enabled

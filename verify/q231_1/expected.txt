@@ -1,0 +1,5 @@
+I am the base constructor
+I have an extra value: 5
+I borrow 5 form a constructor
+I have more values: 6.3
+I have no param

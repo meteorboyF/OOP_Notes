@@ -1,0 +1,2 @@
+seat number of Maria: 3
+seat number of John: 32

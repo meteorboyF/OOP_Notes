@@ -1,0 +1,2 @@
+Max 19 at index 2
+Min -8 at index 5

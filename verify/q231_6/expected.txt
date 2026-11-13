@@ -1,0 +1,12 @@
+Name: OrderCake
+Rate: 150.0
+Weight: 3.0
+Total Price: 450.0
+Name: OrderCake
+Rate: 120.0
+Weight: 2.5
+Total Price: 300.0
+Name: ReadymadeCake
+Rate: 200.0
+Quantity: 2
+Total Price: 400.0

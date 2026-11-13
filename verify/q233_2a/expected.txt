@@ -1,0 +1,3 @@
+Account id:M-Mr.Rahman
+balance before:1000.0
+Balance cannot be negative

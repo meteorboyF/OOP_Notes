@@ -1,0 +1,12 @@
+B: static block
+--- main ---
+B() - no arg
+A: static block
+A: instance block
+A(int)
+A(): no-arg
+A - a = 17, cnt = 11
+B - cnt = 1
+A: instance block
+A(int)
+A - a = 5, cnt = 12

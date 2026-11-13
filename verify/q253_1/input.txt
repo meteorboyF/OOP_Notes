@@ -1,0 +1,6 @@
+Anwar 501 3.65
+Bithi 502 3.80
+Choton 503 3.20
+Dipa 504 3.95
+Emon 505 2.90
+Farah 506 3.55

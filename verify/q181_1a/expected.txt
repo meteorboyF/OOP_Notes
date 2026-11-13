@@ -1,0 +1,6 @@
+Before swap
+011162101 Kratos 3.0
+011162102 Thanos 4.0
+After swap
+011162102 Thanos 4.0
+011162101 Kratos 3.0

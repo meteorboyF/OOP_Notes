@@ -1,0 +1,5 @@
+Row 0 sum = 6
+Row 1 sum = 15
+Col 0 sum = 5
+Col 1 sum = 7
+Col 2 sum = 9

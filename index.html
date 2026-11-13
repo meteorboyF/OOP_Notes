@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OOP Mid Notes</title>
+<meta name="description" content="CSE 1115 Object Oriented Programming mid-term notes: concepts, solved past questions, and step-by-step memory visualisers.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%234f46e5'/><text x='16' y='22' font-size='15' text-anchor='middle' fill='white' font-family='monospace' font-weight='700'>{}</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script>
+  try { var t = JSON.parse(localStorage.getItem('oop-theme')); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+</script>
+</head>
+<body>
+<header class="topbar">
+  <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+  <a class="brand" href="#/"><span class="logo">{}</span><span>OOP Mid Notes</span></a>
+  <div class="search-wrap">
+    <input id="search" type="search" placeholder="Search questions… (e.g. static, swap, jagged)" autocomplete="off">
+  </div>
+  <button class="icon-btn" id="themeBtn" aria-label="Toggle dark mode" title="Toggle theme">◐</button>
+</header>
+<div class="layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="nav-group">
+      <a href="#/" data-nav="home">🏠 Home</a>
+      <a href="#/cheatsheet" data-nav="cheatsheet">⚡ Exam cheat-sheet</a>
+    </div>
+    <div class="nav-title">Learn</div>
+    <div class="nav-group">
+      <a href="#/learn/class-object" data-nav="learn/class-object">📦 Class &amp; Object</a>
+      <a href="#/learn/arrays" data-nav="learn/arrays">🔢 Arrays</a>
+    </div>
+    <div class="nav-title">Past mid questions</div>
+    <div class="nav-group">
+      <a href="#/questions/class" data-nav="questions/class">📝 Class &amp; Object</a>
+      <a href="#/questions/array" data-nav="questions/array">📝 Arrays</a>
+      <a href="#/papers" data-nav="papers">🗂️ By paper</a>
+    </div>
+    <div class="nav-title">Practice</div>
+    <div class="nav-group">
+      <a href="#/practice" data-nav="practice">💻 Array problems</a>
+    </div>
+    <div class="nav-foot" id="progressFoot"></div>
+  </nav>
+  <main id="app" tabindex="-1"></main>
+</div>
+<div class="scrim" id="scrim"></div>
+
+<script src="js/core.js"></script>
+<script src="js/tracer.js"></script>
+<script src="js/widgets.js"></script>
+<script src="js/data/concepts.js"></script>
+<script src="js/data/q-class.js"></script>
+<script src="js/data/q-class-2.js"></script>
+<script src="js/data/q-array.js"></script>
+<script src="js/data/practice.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

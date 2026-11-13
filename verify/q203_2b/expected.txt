@@ -1,0 +1,2 @@
+Sum of elements < 10: 24.0
+Size: 8

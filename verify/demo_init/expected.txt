@@ -1,0 +1,7 @@
+main starts
+static block, count = 0
+instance block, x = 11
+Demo(int), x = 16
+Demo(), x = 16
+instance block, x = 11
+Demo(int), x = 111

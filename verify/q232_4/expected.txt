@@ -1,0 +1,4 @@
+count= 2
+value = 8
+mark= 90.0
+calculate method is called

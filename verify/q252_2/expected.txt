@@ -1,0 +1,14 @@
+FirstClass: static block
+FirstClass: static block again
+MAIN: start
+SecondClass: static var b init
+SecondClass: static block
+FirstClass: one-arg ctor, a = 9
+FirstClass: no-arg ctor
+FirstClass: one-arg ctor, a = 9
+FirstClass: display(), a = 2, x = 10
+SecondClass: display(), b = 9
+SecondClass: instance block
+SecondClass: no-arg ctor
+SecondClass: display(), b = 8
+MAIN: end

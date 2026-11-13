@@ -1,0 +1,10 @@
+Fruit Details:
+Name: Apple
+Weight: 3.5kg
+Price per kg: 100.0
+Total price: 350.0
+Fruit Details:
+Name: Mango
+Weight: 5.0kg
+Price per kg: 110.0
+Total price: 550.0
